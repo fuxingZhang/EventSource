@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <div style="display: flex;">
+        <div id="div1" style="flex: 1;"></div>
+        <div id="div2" style="flex: 1;"></div>
+    </div>
+    <script type="text/javascript">
+        var div1 = document.querySelector('#div1')
+        var div2 = document.querySelector('#div2')
+        var evtSource = new EventSource("http://localhost:3000/sendMessage");
+        //收到服务器发生的事件时触发
+        evtSource.onmessage = function (e) {
+            div1.innerHTML += `${e.type}: ${e.data}</br>`
+            console.log(e.data);
+        }
+        //成功与服务器发生连接时触发
+        evtSource.onopen = function () {
+            div1.innerHTML += "Server open</br>"
+            console.log("Server open")
+        } 
+        //出现错误时触发
+        evtSource.onerror = function () {
+            div1.innerHTML += `Error</br>`
+            console.log("Error")
+        } 
+
+         //自定义事件
+        evtSource.addEventListener("myEvent", function (e) {
+            div2.innerHTML += `${e.type}: ${e.data}</br>`
+            console.log('event2', e);
+        }, false)
+    </script>
+</body>
+</html>
